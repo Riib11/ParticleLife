@@ -1,7 +1,6 @@
 module Environment
-( Environment
-, environment_size
-, environment_size_int
+( Environment (Environment, environment_particles, environment_alpha, environment_beta, environment_rho, environment_size)
+, set_particles
 ) where
 
 import Graphics.Gloss.Interface.Pure.Game
@@ -14,9 +13,15 @@ import Particle
  /  Environment
 /----------------------------------------------------------------------------/-}
 
--- TODO: add more parameters
 data Environment = Environment
-  { particles :: [Particle] }
+  { environment_particles :: [P]    -- inhabiting particles
+  , environment_alpha     :: Float  -- rotate alpha each update
+  , environment_beta      :: Float  -- coefficient of interaction
+  , environment_rho       :: Float  -- radius of interaction
+  , environment_size      :: Vector -- size in sim units
+  } deriving (Show)
 
-environment_size     = (600, 600) :: (Float, Float)
-environment_size_int = (600, 600) :: (Int, Int)
+set_particles :: [Particle] -> Environment -> Environment
+set_particles ps
+  (Environment _  alpha beta rho size) =
+  (Environment ps alpha beta rho size)

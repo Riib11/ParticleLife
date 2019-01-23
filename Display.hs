@@ -30,4 +30,4 @@ rate = 80
 /----------------------------------------------------------------------------/-}
 
 render :: Environment -> Picture
-render world = unimplemented
+render world = error "unimplemented"

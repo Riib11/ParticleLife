@@ -8,4 +8,4 @@ import Environment
 import Debug
 
 input :: Event -> Environment -> Environment
-input (EventKey key Down modifiers (x,y)) world = unimplemented
+input (EventKey key Down modifiers (x,y)) world = error "unimplemented"

@@ -1,10 +1,7 @@
 module Debug
-( unimplemented
-, debug
+( debug
 , logged
 ) where
-
-unimplemented = error "unimplemented"
 
 debug  msg = putStrLn $ "[>] " ++ msg
 logged msg = putStrLn $ "[*] " ++ msg
