@@ -2,12 +2,12 @@
 
 A life-like simulation with discrete particle-velocity updates in float-space.
 
-Inspired by IZGartLife: https://www.youtube.com/watch?v=makaJpLvbow&feature=youtu.be
-Interesting, psuedo-related video by Stated Clearly: https://www.youtube.com/watch?v=mRzxTzKIsp8
+_Primordial Particle Systems_ by IZGartLife [web](http://zool33.uni-graz.at/artlife/PPS)
+_What is Chemical Evolution_ introduced by Stated Clearly [video](https://www.youtube.com/watch?v=mRzxTzKIsp8)
 
 ## Compilation
 
-*Requirments*: Glasgow Haskell compiler (ghc), Gloss haskell library (https://hackage.haskell.org/package/gloss).
+*Requirements*: [GHC](https://www.haskell.org/ghc/), [Gloss](https://hackage.haskell.org/package/gloss).
 
 *Execution*: navigate to `ParticleLife/` and execute the following:
 
@@ -25,6 +25,6 @@ Navigate to `ParticleLife/` and execute the following:
 
 ## TODO
 
-- parallelize updates (www.microsoft.com/en-us/research/wp-content/uploads/2016/02/parallel_haskell2.pdf)
+- parallelize updates [[pdf](www.microsoft.com/en-us/research/wp-content/uploads/2016/02/parallel_haskell2.pdf)]
 - work on color scheme (`Particle -> Color`)
 - literate documentation
