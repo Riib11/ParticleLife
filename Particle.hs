@@ -4,9 +4,11 @@ module Particle
 , particle_left_right_neighbors
 , add_left_neighbors, add_right_neighbors
 , add_orientation
+, set_position
+, particle_neighbors
 ) where
 
-import Graphics.Gloss.Interface.Pure.Game
+import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
 
 import Debug
@@ -47,3 +49,13 @@ add_orientation :: Float -> P -> P
 add_orientation dr
   (Particle uid pos (ori)      lns rns) =
   (Particle uid pos (ori + dr) lns rns)
+
+set_position :: Vector -> P -> P
+set_position (x, y)
+  (Particle uid pos    ori lns rns) =
+  (Particle uid (x, y) ori lns rns)
+
+particle_neighbors :: P -> Int
+particle_neighbors p = let
+  (lns, rns) = particle_left_right_neighbors p
+  in lns + rns

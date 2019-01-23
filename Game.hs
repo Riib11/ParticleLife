@@ -2,13 +2,14 @@ module Game
 ( start
 ) where
 
-import Graphics.Gloss.Interface.Pure.Game
+import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
 
 import Debug
 import Utility
 import Particle
 import Environment
+import Initialization
 import Display
 import Input
 
@@ -17,41 +18,22 @@ import Input
 /----------------------------------------------------------------------------/-}
 
 start :: IO ()
-start = play
+start = playIO
   window
   background_color
   rate
-  inital_conditions
+  initial_conditions
   render
   input
   update
 
 {-/----------------------------------------------------------------------------/
- /  Initial Conditions
-/----------------------------------------------------------------------------/-}
-
-inital_conditions :: Environment
-inital_conditions = let
-  ps = make_particles
-    [ ((50, 50), 0)
-    , ((50, 50), 0)
-    , ((50, 50), 0)
-    , ((50, 50), 0) ]
-  in
-    Environment
-      (ps         :: [P])    -- particles
-      (0.0        :: Float)  -- alpha
-      (1.0        :: Float)  -- beta
-      (1.0        :: Float)  -- rho
-      ((100, 100) :: Vector) -- size
-
-{-/----------------------------------------------------------------------------/
  /  Update
 /----------------------------------------------------------------------------/-}
 
-update :: Float -> Environment -> Environment
+update :: Float -> Environment -> IO Environment
 update dt environment = let
-  
+  v     = environment_velocity environment
   alpha = environment_alpha environment
   beta  = environment_beta  environment
   rho   = environment_rho   environment
@@ -82,7 +64,6 @@ update dt environment = let
     (p2'', p1'') = helper p2' p1'
     in (p1'', p2'')
 
-  -- after updating neighbor counts,
   -- can linearly update orientation by this rule for each particle:
   -- $$ dr/dt = alpha + beta * ns * sign(rns - lns) $$
   update_orientations :: [P] -> [P]
@@ -93,12 +74,24 @@ update dt environment = let
     in add_orientation (alpha + (beta * ns * side)) p
        : update_orientations ps
 
-  new_particles = update_orientations $ update_neighbors particles
+  -- can linearly update position by this rule for each particle:
+  -- $$ dp/dt = v * (cos t, sin t)
+  update_positions :: [P] -> [P]
+  update_positions ps = let
+    update_position p = let
+      (x , y ) = particle_position p
+      (ori)    = particle_orientation p
+      (dx, dy) = (v * cos ori, v * sin ori)
+      in set_position (x + dx, y + dy) p
+    in map update_position ps
 
-  in set_particles new_particles environment
+  new_particles
+    = update_positions
+    $ update_orientations
+    $ update_neighbors
+      particles
 
-toFloat :: Int -> Float
-toFloat = fromIntegral
+  in return $ set_particles new_particles environment
 
 -- Nothing if not neighbor particle
 -- Float (-1 if left, +1 if right)
@@ -119,9 +112,9 @@ neighbor_status rho p p' = let
 
 -- resets neighbors to 0
 reset_particle :: P -> P
-reset_particle = error "unimplemented"
-  -- (Particle uid pos ori lns rns) =
-  -- (Particle uid pos ori 0   0)
+reset_particle
+  (Particle uid pos ori lns rns) =
+  (Particle uid pos ori 0   0)
 
 -- increment neighbor count for the side
 -- indicated by the given direction

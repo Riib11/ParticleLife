@@ -2,8 +2,10 @@ module Utility
 ( distance
 , line_side
 , sign
+, toFloat
 ) where
 
+import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
 
 import Debug
@@ -29,3 +31,7 @@ sign x
   | x == 0 = 0
   | x <  0 = -1
   | x >  0 = 1
+
+
+toFloat :: Int -> Float
+toFloat = fromIntegral

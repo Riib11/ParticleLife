@@ -13,4 +13,3 @@ main = do
   args <- getArgs               -- read command line arguments
   logged "start ParticleLife"   -- log start
   start                         -- start simulation
-  logged "stop ParticleLife"    -- log stop
