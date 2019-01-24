@@ -2,6 +2,9 @@ module Update
 ( update
 ) where
 
+import Control.Parallel
+
+import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
 
 import Debug
@@ -16,11 +19,14 @@ import Environment
 
 update :: Float -> Environment -> IO Environment
 update dt environment = let
-  v     = environment_velocity environment
-  alpha = environment_alpha environment
-  beta  = environment_beta  environment
-  rho   = environment_rho   environment
-  particles = map reset_particle $ environment_particles environment
+  v     = environment_velocity  environment
+  alpha = environment_alpha     environment
+  beta  = environment_beta      environment
+  rho   = environment_rho       environment
+  ps    = environment_particles environment
+
+  reset_particles :: [P] -> [P]
+  reset_particles = parMap rseq reset_particle
   
   -- update all the particles (each pair-wise interaction)
   update_neighbors :: [P] -> [P]
@@ -72,7 +78,7 @@ update dt environment = let
     = update_positions
     $ update_orientations
     $ update_neighbors
-      particles
+      ps
 
   in return $ set_particles new_particles environment
 
