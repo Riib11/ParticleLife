@@ -5,6 +5,9 @@ module Display
 , render
 ) where
 
+import Parallel
+import Control.Parallel.Strategies
+
 import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
 
@@ -46,12 +49,13 @@ p_translate p = let
   in translate x y
 
 p_scale :: Particle -> Picture -> Picture
-p_scale p = scale 2.0 2.0
+p_scale p = scale 1.5 1.5
 
 p_color :: Particle -> Picture -> Picture
 p_color p = color $ int_to_color (particle_neighbors p)
 
 int_to_color :: Int -> Color
 int_to_color n = let
-  x = (toFloat $ n + 1) / 5
-  in makeColor x x x 1.0
+  x = min 1.0 $ (toFloat $ n + 1) / 5
+  y = 1.0 - x
+  in makeColor 0.2 x y 1.0

@@ -1,10 +1,17 @@
 module Parallel
-( parMapReduce
+( parSimpleMap
+, parMapReduce
 , parSimpleMapReduce
 ) where
 
+import Control.DeepSeq
 import Control.Parallel
 import Control.Parallel.Strategies
+
+import Graphics.Gloss.Interface.IO.Game
+
+parSimpleMap :: (a -> b) -> [a] -> [b]
+parSimpleMap = parMap rseq
 
 -- parallelized map reduce
 parMapReduce

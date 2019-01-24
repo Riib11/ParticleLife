@@ -1,3 +1,3 @@
-f
-  :: Int -> Int
-f x = x
+f :: Int -> Int
+
+f x = 1

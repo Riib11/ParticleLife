@@ -1,2 +1,2 @@
-ghc Main.hs -v0 -o particlelife
+ghc -threaded -O2 --make Main
 

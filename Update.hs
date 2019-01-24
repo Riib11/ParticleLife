@@ -31,16 +31,14 @@ update dt environment = let
   reset_neighbors :: [P] -> [P]
   reset_neighbors = parMap rseq p_reset_neighbors
 
-  {-
-  -- update all the particles (each pair-wise interaction)
-  update_neighbors :: [P] -> [P]
-  update_neighbors []     = []
-  update_neighbors (p:ps) = let
-    (p', ps') = update_with_list p ps
-    in p' : update_neighbors ps'
-  -}
   -- update neighbor counts for each particle
   update_neighbors :: [P] -> [P]
+
+  -- update_neighbors []     = []
+  -- update_neighbors (p:ps) = let
+  --   (p', ps') = update_with_list p ps
+  --   in p' : update_neighbors ps'
+
   update_neighbors ps = let
     -- particle-rest pairs
     p_ps_pairs []     = []
