@@ -8,6 +8,10 @@ module Particle
 , particle_neighbors
 ) where
 
+import Control.Parallel
+import Control.Parallel.Strategies
+-- import Control.DeepSeq
+
 import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
 

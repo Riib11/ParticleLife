@@ -1,25 +1,28 @@
-module Parallel where
+module Parallel
+( parMapReduce
+, parSimpleMapReduce
+) where
 
-import Control.Parallel (par, pseq)
+import Control.Parallel
+import Control.Parallel.Strategies
 
-parMap :: (a -> b) -> [a] -> [b]
-parMap f ls = case ls of
-  []     -> []
-  (x:xs) -> let
-    r = f x
-    in r `par` r : parMap f xs
+-- parallelized map reduce
+parMapReduce
+  :: Strategy b     -- strategy for mapping
+  -> (a -> b)       -- map function
+  -> Strategy c     -- strategy for reducing
+  -> ([b] -> c)     -- reduce function
+  -> [a]
+  -> c
+parMapReduce map_strat map_func red_strat red_func ls = let
+  map_result = parMap map_strat map_func ls
+  red_result = red_func map_result `using` red_strat
+  in map_result `pseq` red_result
 
-forceList :: [a] -> ()
-forceList ls = case ls of
-  []     -> ()
-  (x:xs) -> x `pseq` forceList xs
-
-strictParMap :: (a -> b) -> [a] -> [b]
-strictParMap f ls = forceList ls `seq` map f xs
-
-forceListAndElts :: (a -> ()) -> [a] -> ()
-forceListAndElts forceElt ls = case ls of
-  []     -> ()
-  (x:xs) -> forceElt x `seq` forceListAndElts forceElt xs
-
-
+parSimpleMapReduce
+  :: (a -> b)       -- map function
+  -> ([b] -> c)     -- reduce function
+  -> [a]
+  -> c
+parSimpleMapReduce map_func red_func ls =
+  parMapReduce rseq map_func rseq red_func ls

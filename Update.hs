@@ -2,7 +2,9 @@ module Update
 ( update
 ) where
 
+import Control.Parallel
 import Control.Parallel.Strategies
+import Parallel
 
 import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
@@ -27,13 +29,34 @@ update dt environment = let
 
   reset_particles :: [P] -> [P]
   reset_particles = parMap rseq reset_particle
-  
+
+  {-
   -- update all the particles (each pair-wise interaction)
   update_neighbors :: [P] -> [P]
   update_neighbors []     = []
   update_neighbors (p:ps) = let
     (p', ps') = update_with_list p ps
     in p' : update_neighbors ps'
+  -}
+
+  -- update neighbor counts for each particle
+  update_neighbors :: [P] -> [P]
+  update_neighbors ps = let
+    -- particle-rest pairs
+    p_ps_pairs []     = []
+    p_ps_pairs (p:ps) = (p, ps) : p_ps_pairs ps
+    -- map
+    map_func :: (P, [P]) -> (P, [P])
+    map_func (p, ps) = update_with_list p ps
+    -- reduce
+    red_func :: [(P, [P])] -> [P]
+    red_func [] = []
+    red_func ((p, ps):xs) = p : (ps_combine ps $ red_func xs)
+    -- map-reduce, where
+    --  a = (P, [P])
+    --  b = (P, [P])
+    --  c = [P]
+    in parSimpleMapReduce map_func red_func (p_ps_pairs ps)
 
   -- update a particle with each of a list of particles
   update_with_list :: P -> [P] -> (P, [P])
@@ -81,6 +104,24 @@ update dt environment = let
       ps
 
   in return $ set_particles new_particles environment
+
+-- combine the left/right neighbor counts of each particle pair
+-- (with the name UID) in order between two particles lists
+ps_combine :: [P] -> [P] -> [P]
+ps_combine ps1 ps2 = case (ps1, ps2) of
+  ([], []) -> []
+  ((p1:ps1'), (p2:ps2')) -> p_combine p1 p2 : ps_combine ps1' ps2'
+
+-- combine the left/right neighbor counts of two particles
+-- with the same UID
+p_combine :: P -> P -> P
+p_combine p1 p2 = let
+  uid = particle_uid         p1
+  pos = particle_position    p1
+  ori = particle_orientation p1
+  (p1_lns, p1_rns) = particle_left_right_neighbors p1
+  (p2_lns, p2_rns) = particle_left_right_neighbors p2
+  in Particle uid pos ori (p1_lns + p2_lns) (p1_lns + p1_rns)
 
 -- Nothing if not neighbor particle
 -- Float (-1 if left, +1 if right)
