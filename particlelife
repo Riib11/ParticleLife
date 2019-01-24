@@ -1,0 +1,1 @@
+./src/Main +RTS -N4 -RTS 700000
