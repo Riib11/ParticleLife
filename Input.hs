@@ -4,9 +4,10 @@ import System.Exit
 import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
 
+import Debug
+
 import Particle
 import Environment
-import Debug
 
 input :: Event -> Environment -> IO Environment
 input (EventKey (Char 'q') Down modifiers (x,y)) _ = do

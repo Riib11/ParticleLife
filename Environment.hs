@@ -7,6 +7,7 @@ import Graphics.Gloss.Interface.IO.Game
 import Graphics.Gloss.Data.Vector
 
 import Debug
+
 import Particle
 
 {-/----------------------------------------------------------------------------/
