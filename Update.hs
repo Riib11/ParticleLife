@@ -27,17 +27,18 @@ update dt environment = let
   rho   = environment_rho       environment
   ps    = environment_particles environment
 
-  reset_particles :: [P] -> [P]
-  reset_particles = parMap rseq reset_particle
+  -- reset each particle's left/right neighbors to 0
+  reset_neighbors :: [P] -> [P]
+  reset_neighbors = parMap rseq p_reset_neighbors
 
+  {-
   -- update all the particles (each pair-wise interaction)
   update_neighbors :: [P] -> [P]
   update_neighbors []     = []
   update_neighbors (p:ps) = let
     (p', ps') = update_with_list p ps
     in p' : update_neighbors ps'
-    
-  {-
+  -}
   -- update neighbor counts for each particle
   update_neighbors :: [P] -> [P]
   update_neighbors ps = let
@@ -56,7 +57,6 @@ update dt environment = let
     --  b = (P, [P])
     --  c = [P]
     in parSimpleMapReduce map_func red_func (p_ps_pairs ps)
-  -}
 
   -- update a particle with each of a list of particles
   update_with_list :: P -> [P] -> (P, [P])
@@ -101,6 +101,7 @@ update dt environment = let
     = update_positions
     $ update_orientations
     $ update_neighbors
+    $ reset_neighbors
       ps
 
   in return $ set_particles new_particles environment
@@ -141,8 +142,8 @@ neighbor_status rho p p' = let
       in Just $ line_side pos ori pos'
 
 -- resets neighbors to 0
-reset_particle :: P -> P
-reset_particle
+p_reset_neighbors :: P -> P
+p_reset_neighbors
   (Particle uid pos ori lns rns) =
   (Particle uid pos ori 0   0)
 
