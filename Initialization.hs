@@ -22,7 +22,7 @@ ps_stream = let
 
 initial_conditions :: Environment
 initial_conditions = let
-  ps = take 100 ps_stream
+  ps = take 20 ps_stream
   in
     Environment
       (ps         :: [P])    -- particles
