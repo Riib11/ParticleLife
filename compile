@@ -1,2 +1,2 @@
-ghc Main.hs -o particlelife
+ghc Main.hs -v0 -o particlelife
 

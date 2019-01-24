@@ -30,15 +30,14 @@ update dt environment = let
   reset_particles :: [P] -> [P]
   reset_particles = parMap rseq reset_particle
 
-  {-
   -- update all the particles (each pair-wise interaction)
   update_neighbors :: [P] -> [P]
   update_neighbors []     = []
   update_neighbors (p:ps) = let
     (p', ps') = update_with_list p ps
     in p' : update_neighbors ps'
-  -}
-
+    
+  {-
   -- update neighbor counts for each particle
   update_neighbors :: [P] -> [P]
   update_neighbors ps = let
@@ -57,6 +56,7 @@ update dt environment = let
     --  b = (P, [P])
     --  c = [P]
     in parSimpleMapReduce map_func red_func (p_ps_pairs ps)
+  -}
 
   -- update a particle with each of a list of particles
   update_with_list :: P -> [P] -> (P, [P])
