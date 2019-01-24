@@ -7,7 +7,7 @@ _What is Chemical Evolution_ introduced by Stated Clearly [video](https://www.yo
 
 ## Compilation
 
-*Requirements*: [GHC](https://www.haskell.org/ghc/), [Gloss](https://hackage.haskell.org/package/gloss).
+*Prerequisites*: [GHC](https://www.haskell.org/ghc/), [Gloss](https://hackage.haskell.org/package/gloss).
 
 *Execution*: navigate to `ParticleLife/` and execute the following:
 
@@ -25,6 +25,7 @@ Navigate to `ParticleLife/` and execute the following:
 
 ## TODO
 
-- parallelize updates [[pdf](www.microsoft.com/en-us/research/wp-content/uploads/2016/02/parallel_haskell2.pdf)]
-- work on color scheme (`Particle -> Color`)
-- literate documentation
+* [x] parallelize updates [[pdf](www.microsoft.com/en-us/research/wp-content/uploads/2016/02/parallel_haskell2.pdf)]
+* [x] aesthetic color scheme (`Particle -> Color`)
+* [ ] literate documentation
+* [ ] command-line options for number of cores, number of particles, initial particle configurations, etc.
