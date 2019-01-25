@@ -29,3 +29,4 @@ Navigate to `ParticleLife/` and execute the following:
 * [x] aesthetic color scheme (`Particle -> Color`)
 * [ ] literate documentation
 * [ ] command-line options for number of cores, number of particles, initial particle configurations, etc.
+* [ ] save Pictures to image files
